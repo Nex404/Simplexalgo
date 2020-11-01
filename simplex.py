@@ -21,7 +21,7 @@ def calc_cut(listofvars, listofresults):
     x = np.linalg.solve(a,b)
 
     if np.allclose(np.dot(a,x),b):
-        print(x)
+        # print(x)
         return x
     else:
         print("not solvable")
@@ -32,26 +32,39 @@ def einleser():
     global dim 
     dim = int(input("In welcher Dimension wird gerechnet?:"))
     global zf
-    zf = [input("Bitte gebe die ZF an (Bsp.: 3*x1+2*x2+17*x3 == 3, 2, 17):")]
+    zf = input("Bitte gebe die ZF an (Bsp.: 3*x1+2*x2+17*x3 == 3, 2, 17):").split(",")
+    zf = list(zf)
+    # print(type(zf))
+    # print(type(zf[1]))
+    for x in range(len(zf)):
+        zf[x] = float(zf[x])
+
+    # print(type(zf[1]))
     global optimierungsrichtung
     optimierungsrichtung = input("Eingabe der Optimierungsrichtung (min/max):")
     while True:
-        if raw_input("Weitere NB? (y/n):") == "y":
-            v = input("Bitte gebe die NB in NF an (Variablenteil):")
+        if input("Weitere NB? (y/n):") == "y":
+            v = input("Bitte gebe die NB in NF an (Variablenteil):").split(",")
             v = list(v)
-            print(v)
+            # print(v)
+            # print(type(v))
 
             for x in range(len(v)):
-                v[x] = float(v[x])    
+                v[x] = float(v[x])   
+
+            # print(type(v[1])) 
             # print(v)
             # print(type(v))
             # print(type(v[0]))
             # global vars
             vars.append(v)
 
-            # op = input("Operator eingeben (<,>,<=,>=):")
-            op = "<="
-            operator.append(op)
+            op = input("Operator eingeben (<= : k, >= : g):")
+            if op == "k":
+                operator.append("<=")
+            else:
+                operator.append(">=")
+
 
             r = input("Bitte gebe die NB in NF an (Ergebnisteil):")
             r = float(r)
@@ -71,30 +84,40 @@ def calc_schnittpunkte():
         for z in range(dim):
             if z == y:
                 # hier soll was schief laufen
-                weitere_nb[z] = 1
+                weitere_nb.append(1) 
             else:
-                weitere_nb[z] = 0  
+                weitere_nb.append(0)
         vars.append(weitere_nb)
 
-
+    # print(vars)
     # Berrechnung Anzahl Schnittpunkte der NBs
-    for x in vars:
-        j = x+1
-        for j in range(len(vars)):
+    for x in range(len(vars)):
+        for j in range(x+1, len(vars)):
+            # print(j)
             new_array_var = []
             new_array_var.append(vars[x])
             new_array_var.append(vars[j])
+            # print(new_array_var)
+            
             # hier bei res muesste ein fehler passieren
             new_array_res = []
             new_array_res.append(res[x])
             new_array_res.append(res[j])
-            schnittpunkte.append(calc_cut(new_array_var, new_array_res))
+            # print(new_array_res)
+            # print(new_array_var)
+            # print(new_array_res)
+            try:
+                schnittpunkte.append(calc_cut(new_array_var,new_array_res))
+            except Exception as e:
+                pass
+
 
 def test_valid():
     # testen der Schnittpunkte ob in allen NB valide
     # iterieren durch die Schnittpunkte
     for x in range(len(schnittpunkte)):
         # iterieren durch die NBs
+        valid_bool.append(True)
         for y in range(len(vars)):
             ergebnis = 0
             hilf = vars[y]
@@ -104,21 +127,17 @@ def test_valid():
             
             # Ergebnis Valide?
             if operator[y] == "<=":
-                if ergebnis <= res[y]:
-                    valid_bool[x] = True
-                else:
+                if ergebnis > res[y]:
                     valid_bool[x] = False
+                    break
 
             if operator[y] == ">=":
-                if ergebnis >= res[y]:
-                    valid_bool[x] = True
-                else:
+                if ergebnis < res[y]:
                     valid_bool[x] = False
-            
+                    break
+            # print(x,y)
             # normalerweise noch casn von "<" bzw ">"
-            
-            if valid_bool[x] == False:
-                break
+
                     
                 
     # speichern der nicht validen schnittpunkt STELLEN in ein extra array
@@ -134,7 +153,7 @@ def opt():
     dim_of_zf = len(zf)
     # print(dim_of_zf)
     num_opt = 0
-    for alpha in valid_bool:
+    for alpha in range(len(valid_bool)):
         if valid_bool[alpha] == True:
             num_opt = alpha
             break
@@ -142,7 +161,7 @@ def opt():
     s_start = schnittpunkte[num_opt]
     # setzen eines allgemeinen Startwerts von opt
     for q in range(dim_of_zf):
-        opt += zf[q] * s_start[q]
+        opt += s_start[q] * zf[q] 
 
 
     for x in range(len(schnittpunkte)):
@@ -171,12 +190,19 @@ def opt():
 
 
 # Test ohne einleser
-zf = [0.5,1]
-vars = [[2,1], [-0.5,1]]
-res = [7,2]
-operator = ["<=", "<="]
+# dim = 2
+# zf = [10,6]
+# vars = [[12,6], [4,3], [2,3]] #, [1,0], [0,1]]
+# optimierungsrichtung = "max"
+# res = [10200, 3600, 2700]#, 720, 700]
+# operator = ["<=", ">=", "<="]#, "<=", "<="]
 
-# einleser()
+# calc_cut(vars, res)
+einleser()
 calc_schnittpunkte()
+# for x in schnittpunkte:
+#     print(x)
 test_valid()
+# for x in valid_bool:
+#     print(x)
 opt()
