@@ -1,3 +1,10 @@
+#####################################################################################
+# This is an open source project for the implementation of the Simplex Algorithm    #
+# If you use this Code, you have to include the author of the original code.        #
+# Your are free to modify this code                                                 #
+# @author Lukarion20000, Nex404                                                     #
+#####################################################################################
+
 import numpy as np
 
 dim = 0
@@ -190,15 +197,15 @@ def opt():
 
 
 # Test ohne einleser
-# dim = 2
-# zf = [10,6]
-# vars = [[12,6], [4,3], [2,3]] #, [1,0], [0,1]]
-# optimierungsrichtung = "max"
-# res = [10200, 3600, 2700]#, 720, 700]
-# operator = ["<=", ">=", "<="]#, "<=", "<="]
+dim = 2
+zf = [-5,-8]
+vars = [[5,2], [1,5], [1,1]]
+optimierungsrichtung = "min"
+res = [24, 24, 6]
+operator = ["<=", "<=", "<="]#, "<=", "<="]
 
 # calc_cut(vars, res)
-einleser()
+# einleser()
 calc_schnittpunkte()
 # for x in schnittpunkte:
 #     print(x)
