@@ -1,7 +1,7 @@
 #####################################################################################
 # This is an open source project for the implementation of the Simplex Algorithm    #
 # If you use this Code, you have to include the author of the original code.        #
-# Your are free to modify this code                                                 #
+# You are free to modify this code                                                  #
 # @author Lukarion20000, Nex404                                                     #
 #####################################################################################
 
@@ -14,7 +14,10 @@ operator = []
 res = []
 schnittpunkte = []
 valid_bool = [] #schnittpunkte valid
-
+####NEU
+iterators = [] #iteratoren um n-dimensionale aufgaben zu lösen
+letzter_schnittpunkt = True
+####
 
 
 # listofvars(array of array)    | list of results(array)
@@ -38,6 +41,12 @@ def calc_cut(listofvars, listofresults):
 def einleser():
     global dim 
     dim = int(input("In welcher Dimension wird gerechnet?:"))
+
+    ####NEU
+    for x in range(dim)
+    	iterators.append(x) #iteratoren starten auf [0][1]...[n]
+    ####
+
     global zf
     zf = input("Bitte gebe die ZF an (Bsp.: 3*x1+2*x2+17*x3 == 3, 2, 17):").split(",")
     zf = list(zf)
@@ -98,25 +107,49 @@ def calc_schnittpunkte():
 
     # print(vars)
     # Berrechnung Anzahl Schnittpunkte der NBs
-    for x in range(len(vars)):
-        for j in range(x+1, len(vars)):
-            # print(j)
-            new_array_var = []
-            new_array_var.append(vars[x])
-            new_array_var.append(vars[j])
-            # print(new_array_var)
-            
-            # hier bei res muesste ein fehler passieren
-            new_array_res = []
-            new_array_res.append(res[x])
-            new_array_res.append(res[j])
-            # print(new_array_res)
-            # print(new_array_var)
-            # print(new_array_res)
-            try:
-                schnittpunkte.append(calc_cut(new_array_var,new_array_res))
-            except Exception as e:
-                pass
+
+    ####NEU
+    # double check the dimension iterators (Wiederholung der Funktion würde sonst nur abbrechen)
+    for x in range(dim)
+    	iterators[x] = x
+    letzter_schnittpunkt = False
+    while(letzter_schnittpunkt == False)
+    	new_array_var = []
+    	new_array_res = []
+    	for d in range(dim)
+    		new_array_var.append(vars[iterators[d]])
+    		new_array_res.append(vars[iterators[d]])
+    	try:
+            schnittpunkte.append(calc_cut(new_array_var,new_array_res))
+        except Exception as e:
+            pass	
+    	for d in range(dim)
+    		if iterators[dim-(1+d)] == len(vars)-(1+d):
+    			letzter_schnittpunkt = True
+    		else:
+    			letzter_schnittpunkt = False
+    			break
+    ####
+
+    #for x in range(len(vars)):
+    #    for j in range(x+1, len(vars)):
+    #        # print(j)
+    #        new_array_var = []
+    #        new_array_var.append(vars[x])
+    #        new_array_var.append(vars[j])
+    #        # print(new_array_var)
+    #        
+    #        # hier bei res muesste ein fehler passieren
+    #        new_array_res = []
+    #        new_array_res.append(res[x])
+    #        new_array_res.append(res[j])
+    #        # print(new_array_res)
+    #        # print(new_array_var)
+    #        # print(new_array_res)
+    #        try:
+    #            schnittpunkte.append(calc_cut(new_array_var,new_array_res))
+    #        except Exception as e:
+    #            pass
 
 
 def test_valid():
