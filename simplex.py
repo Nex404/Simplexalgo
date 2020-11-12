@@ -17,6 +17,7 @@ valid_bool = [] #schnittpunkte valid
 ####NEU
 iterators = [] #iteratoren um n-dimensionale aufgaben zu lösen
 letzter_schnittpunkt = True
+carry_flag = True
 ####
 
 
@@ -129,6 +130,17 @@ def calc_schnittpunkte():
     		else:
     			letzter_schnittpunkt = False
     			break
+    	carry_flag == True
+    	if letzter_schnittpunkt == False:
+    		for d in range(dim):
+    			if iterators[dim-(1+d)] == len(vars)-(1+d) and carry_flag == True:
+    				iterators[dim-(1+d)] = iterators[dim-(2+d)] + 2
+    				carry_flag = True
+    			elif iterators[dim-(1+d)] != len(vars)-(1+d) and carry_flag == True:
+    				iterators[dim-(1+d)] = iterators[dim-(1+d)] + 1
+    				carry_flag = False
+
+
     ####
 
     #for x in range(len(vars)):
